@@ -1,39 +1,54 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<style> path {stroke: black;}</style>
-<body>
+<style> circle {fill: lightblue; stroke: black;} </style>
+<body onload='init()'>
 <svg width=300 height=300>
 </svg>
 <script>
-		var data = [4,8,15,16,23,42];
+const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+ d3.select('body')
+  .selectAll('p')
+  .data(data)
+  .enter()
+  .append('p');
+  
+xdomain = [10,150];
+xrange = [0,200];
+ydomain = [10,150];
+yrange = [200,0];
+cdomain = [0,1];
+crange = [0,1];
+xs = d3.scaleLog().domain(xdomain).range(xrange);
+ys = d3.scaleLog().domain(ydomain).range(yrange);
+cs = d3.scaleLinear().domain(cdomain).range(crange);
+let logScale = d3.scaleLog()
+logScale(10);
+d3.select('svg')
+   .append("g")
+   .attr("transform","translate(50,50)")
+  .selectAll('circle')
+  .data(data)
+  .enter()
+  .append('circle')
+    .attr('cx',function(d,i) {return xs(d.AverageCityMPG);})
+    .attr('cy',function(d,i) {return ys(d.AverageHighwayMPG);})
+    .attr('r',function(d,i) {return +d.EngineCylinders + 2;});
 
-		var svg = d3.select("svg"),
-			width = svg.attr("width"),
-			height = svg.attr("height"),
-			radius = Math.min(width, height) / 2,
-			g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+var y_axis = d3.axisLeft()
+                   .scale(ys)
+.tickValues([10,20,50,100]);;
+    d3.select('svg').append("g")
+       .attr("transform","translate(50,50)")
+       .call(y_axis);
 
-		var color = d3.scaleOrdinal(['pink','lightyellow','lightgreen','lightcyan','lightblue','violet']);
 
-		// Generate the pie
-		var pie = d3.pie();
-
-		// Generate the arcs
-		var arc = d3.arc()
-					.innerRadius(0)
-					.outerRadius(radius/3*2);
-
-		//Generate groups
-		var arcs = g.selectAll("g")
-					.data(pie(data))
-					.enter()
-
-		//Draw arc paths
-		arcs.append("path")
-			.attr("d", arc)
-                        .attr("fill", function(d, i) {
-				return color(i);
-			});
-	</script>
+var x_axis = d3.axisBottom()
+                   .scale(xs)
+.tickValues([10,20,50,100]);;
+    d3.select('svg').append("g")
+       .attr("transform","translate(50,250)")
+       .call(x_axis);
+}
+</script>
 </body>
 </html>
