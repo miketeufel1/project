@@ -1,57 +1,39 @@
-<html> <h1>Hello2!</h1>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<style> circle {fill: lightblue; stroke: black;} </style>
-<body onload='init()'>
-<svg width=300 height=300>
-</svg>
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
 <script>
- 
-async function init() {
-  const data = await d3.csv('https://miketeufel1.github.io/project/cars2017.csv');
- d3.select('body')
-  .selectAll('p')
-  .data(data)
-  .enter()
-  .append('p');
-  
-xdomain = [10,150];
-xrange = [0,200];
-ydomain = [10,150];
-yrange = [200,0];
-cdomain = [0,1];
-crange = [0,1];
-xs = d3.scaleLog().domain(xdomain).range(xrange);
-ys = d3.scaleLog().domain(ydomain).range(yrange);
-cs = d3.scaleLinear().domain(cdomain).range(crange);
-let logScale = d3.scaleLog()
-logScale(10);
-d3.select('svg')
-   .append("g")
-   .attr("transform","translate(50,50)")
-  .selectAll('circle')
-  .data(data)
-  .enter()
-  .append('circle')
-    .attr('cx',function(d,i) {return xs(d.AverageCityMPG);})
-    .attr('cy',function(d,i) {return ys(d.AverageHighwayMPG);})
-    .attr('r',function(d,i) {return +d.EngineCylinders + 2;});
 
-var y_axis = d3.axisLeft()
-                   .scale(ys)
-.tickValues([10,20,50,100]);;
-    d3.select('svg').append("g")
-       .attr("transform","translate(50,50)")
-       .call(y_axis);
+// Start by creating the svg area
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", 400)
+    .attr("height", 400)
 
+// Append a circle
+svg.append("circle")
+  .attr("id", "circleBasicTooltip")
+  .attr("cx", 150)
+  .attr("cy", 200)
+  .attr("r", 40)
+  .attr("fill", "#69b3a2")
 
-var x_axis = d3.axisBottom()
-                   .scale(xs)
-.tickValues([10,20,50,100]);;
-    d3.select('svg').append("g")
-       .attr("transform","translate(50,250)")
-       .call(x_axis);
-  }
+// create a tooltip
+var tooltip = d3.select("#my_dataviz")
+  .append("div")
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .text("I'm a circle!");
+
+//
+d3.select("#circleBasicTooltip")
+  .on("mouseover", function(){return tooltip.style("visibility", "visible");})
+  .on("mousemove", function(){return tooltip.style("top", (event.pageY-800)+"px").style("left",(event.pageX-800)+"px");})
+  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
 </script>
-   <h1>Hello!</h1>
-</body>
-</html>
