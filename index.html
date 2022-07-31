@@ -1,4 +1,4 @@
-<html> <h1>Hello!</h1>
+<html> <h1>Hello2!</h1>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <style> circle {fill: lightblue; stroke: black;} </style>
 <body onload='init()'>
@@ -7,7 +7,7 @@
 <script>
  
 async function init() {
-  const data = await d3.csv('https://flunky.github.io/cars2017.csv');
+  const data = await d3.csv('https://miketeufel1.github.io/project/cars2017.csv');
  d3.select('body')
   .selectAll('p')
   .data(data)
